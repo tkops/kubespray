@@ -1,0 +1,36 @@
+- name: install nfs-utils
+  yum:
+    name: nfs-utils
+
+#- name: define storageclass
+#  copy:
+#    src: nfs_storage_class.yml
+#    dest: /etc/kubernetes/manifests/nfs-storageclass.yml
+#
+#- name: check storageclass
+#  shell: |
+#    kubectl diff -f /etc/kubernetes/manifests/nfs-storageclass.yml
+#  changed_when: false
+#  failed_when: false
+#  register: diff
+#
+#- name: deploy nfs storageclass
+#  shell: |
+#    kubectl apply -f /etc/kubernetes/manifests/nfs-storageclass.yml
+#  when: diff.rc != 0
+
+- name: check nfs-client-provisioner helm installation
+  shell: |
+    helm list -A
+  register: helmlist
+  changed_when: false
+
+- name: add helm repo fpr nfs-client-provisioner
+  shell: 
+    helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner 
+  when: helmlist.stdout.find('nfs-subdir-external-provisioner') == -1
+
+- name: install nfs-client-provisioner
+  shell: |
+    helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --set nfs.server=192.168.207.200 --set nfs.path=/export  --set storageClass.defaultClass=true --set storageClass.archiveOnDelete=false
+  when: helmlist.stdout.find('nfs-subdir-external-provisioner') == -1

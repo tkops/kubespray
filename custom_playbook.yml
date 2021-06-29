@@ -1,0 +1,8 @@
+--- 
+- hosts: kube_control_plane[0]
+  gather_facts: yes
+  tasks:
+    - import_role:
+        name: k8s_apps
+      tags: k8s_apps
+

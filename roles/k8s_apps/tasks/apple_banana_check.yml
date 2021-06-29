@@ -1,0 +1,11 @@
+- name: check apple banana app with curl
+  uri:
+    url: "http://{{ inventory_hostname }}:{{ IngressNodePort }}/{{ item }}"
+  loop:
+    - apple
+    - banana
+  delegate_to: localhost
+  register: results
+  until: results.status == 200
+  retries: 60
+  delay: 10

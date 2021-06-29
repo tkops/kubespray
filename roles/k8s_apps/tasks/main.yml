@@ -1,0 +1,23 @@
+---
+
+- name: deploy apple and banana app
+  import_tasks: apple_banana.yml
+  tags: apple,banana
+
+#- name: End-to-End Test | Check apple / banana app provided by loadbalancer
+#  import_tasks: apple_banana_check.yml
+#  tags: check
+#
+#- name: Install nfs-client-provisioner
+#  import_tasks: nfs-client-provisioner.yml
+#  tags: nfs-client-provisioner
+#
+#- name: Install bitnami mysql
+#  import_tasks: mysql.yml
+#  tags: mysql
+#
+#- name: Install kasten in kasten-io namespace
+#  import_tasks: kasten.yml
+#  tags: kasten
+
+

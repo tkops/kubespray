@@ -1,0 +1,14 @@
+- name: check and deploy application with manifest
+  block:
+    - name: check ressource {{ item }}
+      shell: |
+        kubectl diff -f "{{ item }}"
+      changed_when: false
+      failed_when: false
+      register: diff
+
+    - name: deploy resource {{ item }}
+      shell: |
+        kubectl apply -f "{{ item }}"
+      when: diff.rc != 0
+

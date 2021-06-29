@@ -1,0 +1,9 @@
+- name: copy apple_banana_manifest.yml
+  copy:
+    src: apple_banana_manifest.yml
+    dest: /tmp/apple_banana_manifest.yml
+
+- name: deploy apple banana app
+  include_tasks: apple_banana_deploy.yml
+  loop:
+    - /tmp/apple_banana_manifest.yml

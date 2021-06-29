@@ -1,0 +1,17 @@
+- name: check kasten helm installation
+  shell: |
+    helm list -A
+  register: helmlist
+  changed_when: false
+
+- name: add kasten helm repo
+  shell: |
+    helm repo add kasten https://charts.kasten.io/
+  when: helmlist.stdout.find('k10') == -1
+
+- name: install kasten with helm
+  shell: |
+    helm install k10 kasten/k10 --namespace=kasten-io --set ingress.create=true  --create-namespace --set auth.tokenAuth.enabled=true
+  when: helmlist.stdout.find('k10') == -1
+
+

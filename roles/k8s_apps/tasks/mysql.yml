@@ -1,0 +1,22 @@
+- name: check bitnami helm installation
+  shell: |
+    helm list -A
+  register: helmlist
+  changed_when: false
+
+- name: add helm repo for bitnami mysql 
+  shell: 
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+  when: helmlist.stdout.find('mysql') == -1
+
+- name: install bitnami mysql
+  shell: |
+    helm install my-release bitnami/mysql --namespace mysql --create-namespace
+  when: helmlist.stdout.find('mysql') == -1
+
+- name: install mysql client
+  yum:
+    name:
+      - mysql
+      - jq
+
